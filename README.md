@@ -2,14 +2,13 @@
 ## Use Cases
 
 - Direct syscalls in C++ (avoiding `GetProcAddress` / EDR hooks)
-- Kernel exploit development
 - Custom runtime environments
 - Static analysis tools
 - Educational purposes
 ---
 ## syscall example
 
-The syscall stub `syscall_stub.h` works by **dynamically generating a tiny executable stub** at runtime using `VirtualAlloc` and a hardcoded template (`mov r10, rcx; mov eax, <id>; syscall; ret`), then **patching in the desired syscall ID** and invoking it directly with up to 14 arguments passed via a `void**` array. This is a direct syscall and basically avoids all the stupid inline asm shit that you cannot do in x64 msvc. 
+The syscall stub `syscall_stub.h` works by **dynamically generating a tiny executable stub** at runtime using `VirtualAlloc`(though you can change it to support km) and a hardcoded template (`mov r10, rcx; mov eax, <id>; syscall; ret`), then **patching in the desired syscall ID** and invoking it directly with up to 14 arguments passed via a `void**` array. This is a direct syscall and basically avoids all the stupid inline asm shit that you cannot do in x64 msvc. 
 
 ---
 ### how it works
@@ -18,17 +17,18 @@ The syscall stub `syscall_stub.h` works by **dynamically generating a tiny execu
    The `<syscall_id>` placeholder inside the stub is patched in at runtime.
    This allows the same template to be reused for any syscall simply by writing the appropriate ID into the stub’s instruction buffer.
    Calls are issued through a generic `invoke_syscall(void** args)` interface that supports up to **14 arguments**, matching the Windows syscall convention for register + stack arguments.
-   Once arguments and syscall ID are prepared, the generated stub is invoked like a regular function pointer, resulting in a clean, unhooked, direct transition into kernel mode.
+
 
 ### Key Advantages
 
 * **No inline asm needed** (compatible with x64 MSVC)
-* **Bypasses user-mode API hooks**
+* **Bypasses most user-mode API hooks**
 * **Small and self-contained**
 * **Works with arbitrary syscall numbers**
-* **Lightweight and fast** — only a few bytes of executable code
+* **Lightweight and fast** only a few bytes of executable code.
 
-
+### coming soon?
+once I get my PC back I'm planning to add km support and release the dumper. I'll also fix the rest of this fucked up readme
 
 ---
 ## syscall dumper
