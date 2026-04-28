@@ -16,6 +16,7 @@ namespace utils {
 
 
         static BYTE* executable_stub = []() -> BYTE* {
+            // if you wanna add km support just switch this to any alloc method from km ex: ZwAllocateVirtualMemory
             void* page = VirtualAlloc(
                 nullptr,
                 4096,
