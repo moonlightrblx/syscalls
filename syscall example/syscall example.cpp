@@ -3,16 +3,6 @@
 #include <iostream>
 #include <iomanip>
 
-std::wstring nts_to_string(NTSTATUS status) {
-    wchar_t buf[256];
-    FormatMessageW(
-        FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-        nullptr, status, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        buf, _countof(buf), nullptr
-    );
-    return buf;
-}
-
 
 int main() {
     {
@@ -28,10 +18,7 @@ int main() {
         delay.QuadPart = -1000000LL;  // 100ms in 100ns units (negative = relative)
 
         NTSTATUS status = syscalls::invoke<syscalls::idx::nt_delay_execution>( (void*)FALSE,(void*)&delay);
-        std::wcout << L"[*] NtDelayExecution(100ms) -> 0x" << std::hex << status << L" ("
-            << nts_to_string(status) << L")\n";
-    }
-
+     
     std::wcout << L"[+] Done.\n";
     return 0;
 }
