@@ -3,22 +3,23 @@
 #include <iostream>
 #include <iomanip>
 
-
+// only um example for simplicity
 int main() {
-    {
-        constexpr auto id = syscalls::idx::nt_write_file    ;
-        const char* name = syscalls::get<syscalls::idx::nt_write_file>();
+	{
+		constexpr auto id = syscalls::idx::nt_write_file;
+		const char* name = syscalls::get<syscalls::idx::nt_write_file>();
 
-        std::cout << "[+] Syscall ID 0x" << std::hex << id
-            << " → " << (name ? name : "Unknown") << "\n";
-    }
+		std::cout << "[+] Syscall ID 0x" << std::hex << id
+			<< " → " << (name ? name : "Unknown") << "\n";
+	}
 
-    {
-        LARGE_INTEGER delay;
-        delay.QuadPart = -1000000LL;  // 100ms in 100ns units (negative = relative)
+	{
+		LARGE_INTEGER delay;
+		delay.QuadPart = -1000000LL;  // 100ms in 100ns units (negative = relative)
 
-        NTSTATUS status = syscalls::invoke<syscalls::idx::nt_delay_execution>( (void*)FALSE,(void*)&delay);
-     
-    std::wcout << L"[+] Done.\n";
-    return 0;
+		NTSTATUS status = syscalls::invoke<syscalls::idx::nt_delay_execution>((void*)FALSE, (void*)&delay);
+	}
+
+	std::wcout << L"[+] Done.\n";
+	return 0;
 }
